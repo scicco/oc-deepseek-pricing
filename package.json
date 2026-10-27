@@ -1,0 +1,61 @@
+{
+  "name": "oc-deepseek-pricing",
+  "version": "0.1.0",
+  "description": "OpenCode TUI plugin showing DeepSeek peak and off-peak pricing windows",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "deepseek",
+    "pricing",
+    "tui"
+  ],
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./tui": "./src/tui.tsx"
+  },
+  "opencode": {
+    "tui": "./src/tui.tsx"
+  },
+  "scripts": {
+    "test": "bun test",
+    "check": "bun run format:check && bun run lint && bun run typecheck && bun test",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "biome:check": "biome check .",
+    "biome:fix": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "bun run check"
+  },
+  "peerDependencies": {
+    "@opencode/plugin": ">=2.2.0 <2.3.0",
+    "@opentui/core": "0.7.x",
+    "@opentui/solid": "0.7.x",
+    "solid-js": "1.9.17"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.3",
+    "@opencode/plugin": "2.2.0",
+    "@opentui/core": "0.7.0",
+    "@opentui/solid": "0.7.0",
+    "@types/bun": "1.4.4",
+    "solid-js": "1.9.17",
+    "typescript": "5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scicco/oc-deepseek-pricing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/scicco/oc-deepseek-pricing/issues"
+  },
+  "homepage": "https://github.com/scicco/oc-deepseek-pricing#readme"
+}

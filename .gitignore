@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+.DS_Store
+*.log
+
+# macOS
+.DS_Store
+
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+*.log
+
+# debugging stuff
+concat-project-files.sh

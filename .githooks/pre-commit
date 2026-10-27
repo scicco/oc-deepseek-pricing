@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -eu
+
+bun run biome:check
+bun run typecheck
+bun test
