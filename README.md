@@ -2,13 +2,14 @@
 
 An OpenCode v2 TUI plugin that displays the current DeepSeek API pricing window in the prompt footer and session sidebar.
 
-The indicator is intended for the direct DeepSeek provider. DeepSeek off-peak rates are half of peak rates.
+The indicator is shown when the selected model ID contains `deepseek`. DeepSeek off-peak rates are half of peak rates.
 
 ## Features
 
 - Displays the current pricing window in the prompt footer.
-- Displays pricing details in the session sidebar.
-- Distinguishes peak and off-peak periods.
+- Displays a compact pricing status in the session sidebar.
+- Exposes complete pricing details through `/deepseek-pricing`.
+- Distinguishes peak and off-peak periods with whale emoji indicators.
 - Shows the next pricing transition and a countdown.
 - Treats weekends as fully off-peak.
 - Supports Chinese public-holiday overrides.
@@ -19,23 +20,44 @@ The indicator is intended for the direct DeepSeek provider. DeepSeek off-peak ra
 
 Peak windows are evaluated in UTC:
 
-- `01:00-04:00 UTC`, Monday through Friday.
-- `06:00-10:00 UTC`, Monday through Friday.
+- 01:00-04:00 UTC, Monday through Friday;
+- 06:00-10:00 UTC, Monday through Friday.
 
 All other times are off-peak, including:
 
-- `04:00-06:00 UTC` on weekdays;
-- all hours after `10:00 UTC` and before `01:00 UTC`;
+- 04:00-06:00 UTC on weekdays;
+- all hours after 10:00 UTC and before 01:00 UTC;
 - Saturdays and Sundays in full;
 - Chinese public holidays in full.
 
-The off-peak price multiplier is `0.5`.
+The off-peak price multiplier is 0.5.
+
+## Installation
+
+Install the published plugin directly with the OpenCode CLI:
+
+```sh
+opencode plugin add oc-deepseek-pricing
+```
+
+To install this exact release:
+
+```sh
+opencode plugin add oc-deepseek-pricing@0.1.0
+```
+
+OpenCode registers the plugin automatically. No manual change to `cli.json`, `opencode.json`, or `tui.jsonc` is required.
+
+Verify the installation with:
+
+```sh
+opencode plugin list
+```
 
 ## Requirements
 
-- OpenCode v2 with TUI plugin support.
-- Bun.
-- A terminal supported by OpenCode.
+- OpenCode v2 with TUI plugin support;
+- a terminal supported by OpenCode.
 
 Development dependencies include:
 
@@ -50,6 +72,7 @@ Development dependencies include:
 ```text
 oc-deepseek-pricing/
 ├── CALENDAR_UPDATE.md
+├── LICENSE
 ├── README.md
 ├── bun.lock
 ├── package.json
@@ -58,7 +81,8 @@ oc-deepseek-pricing/
 │   ├── pricing.test.ts
 │   ├── pricing.ts
 │   └── tui.tsx
-└── tsconfig.json
+├── tsconfig.json
+└── tui.ts
 ```
 
 ## Development setup
@@ -69,10 +93,10 @@ Install dependencies:
 bun install
 ```
 
-Run the TypeScript check:
+Run all validation checks:
 
 ```sh
-bun check
+bun run check
 ```
 
 Run the test suite:
@@ -81,49 +105,7 @@ Run the test suite:
 bun test
 ```
 
-A successful validation should complete without TypeScript errors and with all pricing tests passing.
-
-## OpenCode CLI configuration
-
-Register the local TUI package in:
-
-```text
-~/.config/opencode/cli.json
-```
-
-Keep existing plugins and add `./plugins/oc-deepseek-pricing` to the `plugins` array.
-
-Example:
-
-```json
-{
-  "diffs": {
-    "wrap": "word",
-    "fullscreen": true
-  },
-  "session": {
-    "sidebar": "auto",
-    "scrollbar": false,
-    "thinking": "hide"
-  },
-  "animations": true,
-  "plugins": ["./herdr-opencode", "./plugins/oc-deepseek-pricing"]
-}
-```
-
-Relative paths are resolved from the OpenCode configuration directory.
-
-The package exposes its TUI entrypoint through `package.json`:
-
-```json
-{
-  "exports": {
-    "./tui": "./src/tui.tsx"
-  }
-}
-```
-
-The legacy or integration-specific `tui.jsonc` file does not need to contain this plugin when the package is loaded through `cli.json`.
+A successful validation completes without formatting, lint, TypeScript, or test errors.
 
 ## Restarting OpenCode
 
@@ -133,34 +115,50 @@ Opening a new conversation is not necessarily sufficient because plugin entrypoi
 
 ## Expected interface
 
-When loaded, the prompt footer displays a compact indicator similar to:
+When a DeepSeek model is selected during an off-peak window, the prompt and home footers display:
 
 ```text
-DeepSeek: OFF-PEAK 50% · PEAK in 11h 36m
+🐋💤 off-peak · 9h 13m left
 ```
 
-During a peak window it displays a value similar to:
+During a peak window, they display:
 
 ```text
-DeepSeek: PEAK · OFF-PEAK 50% in 1h 15m
+🐳 peak · 1h 15m left
 ```
 
-The session sidebar displays details similar to:
+The session sidebar displays only the current status and remaining time:
+
+```text
+Status 🐋💤 off-peak
+9h 13m left
+```
+
+During a peak window, the sidebar displays:
+
+```text
+Status 🐳 peak
+1h 15m left
+```
+
+Run `/deepseek-pricing` to display the complete pricing details:
 
 ```text
 DeepSeek pricing
-Status OFF-PEAK 50%
+Status 🐋💤 off-peak
 Reason outside peak windows
-Next PEAK in 11h 36m
+Next peak in 9h 13m
 At 10/28/2026, 2:00:00 AM
 China 2026-10-27
 ```
 
-The exact local transition time depends on the operating-system timezone and daylight-saving rules. Pricing classification itself is based on UTC, while holiday lookup uses the `Asia/Shanghai` calendar date.
+The `Next` line intentionally uses the state name without an emoji. If the Chinese public-holiday calendar does not cover the current year, the command also displays a warning.
+
+The exact local transition time depends on the operating-system timezone and daylight-saving rules. Pricing classification is based on UTC, while holiday lookup uses the Asia/Shanghai calendar date.
 
 ## Chinese public holidays
 
-The holiday data is stored in:
+Holiday data is stored in:
 
 ```text
 src/holidays.ts
@@ -168,7 +166,7 @@ src/holidays.ts
 
 Only officially verified calendar years should be added to `COVERED_HOLIDAY_YEARS`.
 
-For the full annual update procedure, source requirements, timezone rules, validation checklist, and required tests, see [CALENDAR_UPDATE.md](./CALENDAR_UPDATE.md).
+For the complete annual update procedure, source requirements, timezone rules, validation checklist, and required tests, see [CALENDAR_UPDATE.md](./CALENDAR_UPDATE.md).
 
 If the current Chinese calendar year is not covered, the plugin continues to apply the normal UTC weekday and weekend schedule but displays a coverage warning. Do not suppress the warning by adding a year without adding and reviewing the complete official calendar.
 
@@ -200,11 +198,15 @@ bun test
 Run:
 
 ```sh
-bun check
+bun run typecheck
 ```
 
-The repository uses `NodeNext` module resolution. Relative TypeScript imports must therefore use the emitted JavaScript extension, for example:
+The repository uses NodeNext module resolution. Relative TypeScript imports must therefore use the emitted JavaScript extension, for example:
 
 ```ts
 import { getPricingSnapshot } from "./pricing.js"
 ```
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](./LICENSE).
