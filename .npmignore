@@ -1,0 +1,5 @@
+src/**/*.test.ts
+src/**/*.test.tsx
+*.tgz
+*.bak
+*.bak-*
