@@ -4,6 +4,19 @@ An OpenCode v2 TUI plugin that displays the current DeepSeek API pricing window 
 
 The indicator is shown when the selected model ID contains `deepseek`. DeepSeek off-peak rates are half of peak rates.
 
+### Footer indicator
+
+The plugin displays the current DeepSeek pricing window and the remaining time in the OpenCode footer.
+
+![DeepSeekpricingindicatorintheOpenCodefooter](./images/footer.png)
+
+### Detailed pricing status
+
+Run `/deepseek-pricing` to display the current state, reason, next transition, local transition time, and Chinese calendar date.
+
+![DetailedDeepSeekpricingstatus](./images/toast_image.png)
+
+
 ## Features
 
 - Displays the current pricing window in the prompt footer.
