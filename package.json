@@ -1,6 +1,6 @@
 {
   "name": "oc-deepseek-pricing",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "OpenCode TUI plugin showing DeepSeek peak and off-peak pricing windows",
   "type": "module",
   "license": "MIT",
@@ -40,10 +40,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.6.3",
     "@opencode/plugin": "2.2.0",
-    "@opentui/core": "0.7.0",
-    "@opentui/solid": "0.7.0",
     "@types/bun": "1.4.4",
-    "solid-js": "1.9.17",
     "typescript": "5.9.3"
   },
   "repository": {
@@ -53,5 +50,10 @@
   "bugs": {
     "url": "https://github.com/scicco/oc-deepseek-pricing/issues"
   },
-  "homepage": "https://github.com/scicco/oc-deepseek-pricing#readme"
+  "homepage": "https://github.com/scicco/oc-deepseek-pricing#readme",
+  "dependencies": {
+    "@opentui/core": "0.7.0",
+    "@opentui/solid": "0.7.0",
+    "solid-js": "1.9.12"
+  }
 }
